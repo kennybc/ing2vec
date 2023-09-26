@@ -266,4 +266,6 @@ def convert_number(ingredient):
     ingredient = ingredient.replace("⅗", "0.6")
     ingredient = ingredient.replace("⅘", "0.8")
     ingredient = ingredient.replace("⅞", "0.875")
+    ingredient = ingredient.replace("-LRB-", "(")
+    ingredient = ingredient.replace("-RRB-", ")")
     return ingredient

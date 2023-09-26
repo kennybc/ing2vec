@@ -1,21 +1,21 @@
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from db.connect import Database
+from parser.predict import predict_ingredients
 import json
 
 
 class AllRecipesSpider(CrawlSpider):
     name = "allrecipes"
     start_urls = ["https://www.allrecipes.com/"]
-    rules = (Rule(LinkExtractor(allow_domains="www.allrecipes.com"),
+    rules = (Rule(LinkExtractor(allow_domains="www.allrecipes.com", allow=["/recipes/", "/recipe/"]),
              callback="parse", follow=True),)
     db = Database().get_client()
 
     def parse(self, response):
 
-        # crawl but do not parse the following:
-        # - outdated recipe schemas (https://www.allrecipes.com/meat-pies-recipe-7548850)
-        # - non-recipe pages (https://www.allrecipes.com/recipes/17561/lunch/)
+        # crawl but do not parse recipe category pages
+        # parse: find the embedded recipe schema
         if "/recipe/" not in response.url:
             return
         try:
@@ -32,5 +32,6 @@ class AllRecipesSpider(CrawlSpider):
         self.db.insert_one({
             "url": response.url,
             "name": schema["headline"],
-            "ingredients": schema["recipeIngredient"]
+            "ingredients": schema["recipeIngredient"],
+            "ner": predict_ingredients(schema["recipeIngredient"])
         })

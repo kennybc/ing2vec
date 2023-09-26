@@ -1,7 +1,9 @@
 from urllib.parse import unquote
 from db.connect import Database
 from fastapi import FastAPI
-from parser.parse import parse
+from parser.predict import predict_ingredients, predict_labels
+from parser.train import train
+from parser.test import test
 
 
 app = FastAPI()
@@ -26,7 +28,21 @@ async def get_recipe_by_url(url):
 
     return latest
 
+
 @app.get("/parse/{phrase}")
 async def parse_ingredient_phrase(phrase):
     phrase = unquote(phrase)
-    return {"parsed": parse(phrase)}
+    return {
+        "labels": predict_labels(phrase),
+        "ingredients": predict_ingredients(phrase)
+    }
+
+
+@app.get("/train")
+async def train_parser():
+    train()
+
+
+@app.get("/test")
+async def test_parser():
+    test()

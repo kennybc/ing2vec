@@ -72,10 +72,9 @@ def compute_entity_level_f1_score(ground_truths, predictions):
             "Recall": recall, "Precision": precision, "F1_score": f1_score}
     return recall_precision_f1_score
 
-
 def train():
     seed_torch(1)
-    path = here / "./model/"
+    path = here / "./save/"
     with open(here / "config.json", "r") as fp:
         config = json.load(fp)
 
@@ -83,9 +82,7 @@ def train():
         os.mkdir(path)
 
     # Load dataset
-    train_files = here / "./data/ar_gk_train.tsv"
-
-    train_and_valid_samples, _ = get_samples(train_files)
+    train_and_valid_samples, _ = get_samples(here / "./data/ar_gk_train.tsv")
     test_samples_ar_gk, _ = get_samples(here / "./data/ar_gk_test.tsv")
     test_samples_ar, _ = get_samples(here / "./data/ar_test.tsv")
     test_samples_gk, _ = get_samples(here / "./data/gk_test.tsv")
@@ -97,6 +94,9 @@ def train():
     print("Train samples: {}".format(len(train_samples)))
     print("Valid samples: {}".format(len(valid_samples)))
     print("Test samples ar_gk: {}".format(len(test_samples_ar_gk)))
+
+    train_and_valid_samples, _ = get_samples(here / "./data/ar_gk_train.tsv")
+    test_samples_ar_gk, _ = get_samples(here / "./data/ar_gk_test.tsv")
 
     if not os.path.exists(here / "./data/vocab.pkl"):
         # Set up the Vocabulary

@@ -1,1 +1,1 @@
-{"model": {"hidden_size": 300, "head_size": 10, "dropout": 0.3, "layers": 8, "output_size": 8, "freeze_embeddings": false}, "trainer": {"epochs": 50, "batch_size": 1}, "optimizer": {"beta1": 0.9, "beta2": 0.99}}
+{"model": {"hidden_size": 300, "head_size": 10, "dropout": 0.3, "layers": 8, "output_size": 8, "freeze_embeddings": false}, "trainer": {"epochs": 50, "batch_size": 1, "data_for_train": "both", "aug_size": 0}, "optimizer": {"beta1": 0.9, "beta2": 0.99, "lr": 5e-06}}

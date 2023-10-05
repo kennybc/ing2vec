@@ -31,6 +31,7 @@ async def get_recipe_by_url(url):
 
 @app.get("/parse/{phrase}")
 async def parse_ingredient_phrase(phrase):
+    print(infer(phrase))
     phrase = unquote(phrase)
     return {
         "labels": predict_labels(phrase),

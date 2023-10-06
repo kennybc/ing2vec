@@ -9,22 +9,20 @@ app = FastAPI()
 conn = Database()
 db = conn.get_client()
 
-
-@app.get("/recipe/{url}")
+@app.get("/recipe/{url:path}")
 async def get_recipe_by_url(url):
     url = unquote(url)
+    recipe = {}
     if url == "latest":
         from pymongo import DESCENDING
-        latest = db.find_one({}, sort=[("_id", DESCENDING)])
+        recipe = db.find_one({}, sort=[("_id", DESCENDING)])
     else:
-        latest = db.find_one({"url": url})
+        recipe = db.find_one({"url": url})
 
-    if latest is None:
-        latest = {}
-    else:
-        del latest["_id"]
-
-    return latest
+    if recipe:
+        del recipe["_id"]
+    
+    return recipe
 
 
 @app.get("/infer/{phrase}")

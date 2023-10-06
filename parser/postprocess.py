@@ -39,6 +39,7 @@ def postprocess_data(data):
         if isinstance(entity, list):
             for ent in entity:
                 append_if_ingredient(ent)
+                last_word = ""
         else:
             append_if_ingredient(entity)
     

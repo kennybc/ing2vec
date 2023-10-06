@@ -4133,7 +4133,7 @@ diced	STATE
 	
 1	QUANTITY
 cup	UNIT
-long-grain	NAME
+long-grain	STATE
 brown	NAME
 rice	NAME
 	
@@ -4274,7 +4274,7 @@ tahini	NAME
 1/2	QUANTITY
 cup	UNIT
 uncooked	STATE
-long-grain	NAME
+long-grain	STATE
 rice	NAME
 	
 1/2	QUANTITY
@@ -13414,7 +13414,7 @@ water	NAME
 	
 1	QUANTITY
 tablespoon	UNIT
-grainy	NAME
+grainy	STATE
 mustard	NAME
 	
 1/4	QUANTITY
@@ -21190,7 +21190,7 @@ fresh	DF
 or	O
 1	QUANTITY
 teaspoon	UNIT
-candied	STATE
+candied	NAME
 ginger	NAME
 ,	O
 is	O
@@ -21228,7 +21228,7 @@ beef	O
 1	QUANTITY
 jar	UNIT
 tomato	NAME
-and	O
+and	NAME
 basil	NAME
 pasta	NAME
 sauce	NAME
@@ -21409,9 +21409,9 @@ cups	UNIT
 penne	NAME
 pasta	NAME
 -LRB-	O
-regular	O
+regular	STATE
 or	O
-multigrain	O
+multigrain	STATE
 -RRB-	O
 	
 1	QUANTITY
@@ -21569,7 +21569,7 @@ syrup	O
 	
 1/2	QUANTITY
 lb	UNIT
-bulk	O
+bulk	NAME
 pork	NAME
 sausage	NAME
 or	O
@@ -21742,7 +21742,7 @@ minced	STATE
 50	QUANTITY
 g	UNIT
 ground	STATE
-candied	STATE
+candied	NAME
 lemon	NAME
 peel	NAME
 	
@@ -22812,7 +22812,7 @@ cheese	NAME
 	
 1/2	QUANTITY
 cup	UNIT
-candied	STATE
+candied	NAME
 peel	NAME
 	
 1	O
@@ -26025,7 +26025,7 @@ fresh	DF
 	
 2	QUANTITY
 cups	UNIT
-long-grain	O
+long-grain	STATE
 white	NAME
 rice	NAME
 	
@@ -26297,8 +26297,8 @@ oil	NAME
 	
 2	QUANTITY
 teaspoons	UNIT
-whole	O
-grain	NAME
+whole	STATE
+grain	STATE
 mustard	NAME
 	
 1 1/4	QUANTITY
@@ -26553,7 +26553,7 @@ paprika	NAME
 	
 2	QUANTITY
 tablespoons	UNIT
-grainy	NAME
+grainy	STATE
 mustard	NAME
 	
 1	QUANTITY
@@ -26793,7 +26793,7 @@ peppercorns	NAME
 	
 3	QUANTITY
 cups	UNIT
-long-grain	O
+long-grain	STATE
 rice	NAME
 	
 2	QUANTITY
@@ -29844,8 +29844,8 @@ cream	NAME
 	
 1/3	QUANTITY
 cup	UNIT
-whole	O
-grain	NAME
+whole	STATE
+grain	STATE
 mustard	NAME
 	
 1	QUANTITY
@@ -29897,8 +29897,8 @@ tortillas	NAME
 	
 3/4	QUANTITY
 cup	UNIT
-long	O
-grain	O
+long	STATE
+grain	STATE
 white	NAME
 rice	NAME
 	
@@ -30301,8 +30301,8 @@ onion	NAME
 	
 1	QUANTITY
 cup	UNIT
-long	O
-grain	O
+long	STATE
+grain	STATE
 rice	NAME
 -LRB-	O
 uncooked	STATE
@@ -30664,8 +30664,8 @@ raisin	NAME
 	
 1	QUANTITY
 cup	UNIT
-long	O
-grain	O
+long	STATE
+grain	STATE
 white	NAME
 rice	NAME
 	
@@ -30917,8 +30917,8 @@ mashed	STATE
 	
 1/2	QUANTITY
 cup	UNIT
-long	O
-grain	NAME
+long	STATE
+grain	STATE
 brown	NAME
 rice	NAME
 	
@@ -30966,7 +30966,7 @@ cornmeal	NAME
 	
 1/2	QUANTITY
 kg	UNIT
-plain	O
+plain	STATE
 yogurt	NAME
 	
 3/4	QUANTITY
@@ -31821,8 +31821,8 @@ water	NAME
 	
 1	QUANTITY
 cup	UNIT
-long	O
-grain	O
+long	STATE
+grain	STATE
 rice	NAME
 	
 1	QUANTITY
@@ -33156,7 +33156,7 @@ stuffed	O
 olive	NAME
 	
 chopped	STATE
-candied	O
+candied	NAME
 fruit	NAME
 ,	O
 for	O
@@ -36567,9 +36567,9 @@ preference	O
 	
 2	QUANTITY
 tablespoons	UNIT
-candied	STATE
+candied	NAME
 orange	NAME
-peel	O
+peel	NAME
 ,	O
 diced	STATE
 	
@@ -44529,8 +44529,8 @@ drained	STATE
 	
 1	QUANTITY
 cup	UNIT
-long	NAME
-grain	NAME
+long	STATE
+grain	STATE
 white	NAME
 rice	NAME
 	
@@ -49992,8 +49992,8 @@ wine	O
 	
 2	QUANTITY
 slices	UNIT
-whole	O
-grain	NAME
+whole	STATE
+grain	STATE
 bread	NAME
 ,	O
 crusts	O
@@ -51132,10 +51132,10 @@ cup	UNIT
 white	NAME
 rice	NAME
 -LRB-	O
-short	O
+short	STATE
 or	O
-medium	O
-grain	O
+medium	STATE
+grain	STATE
 preferred	O
 -RRB-	O
 	
@@ -51896,7 +51896,7 @@ cilantro	NAME
 1/4	QUANTITY
 cup	UNIT
 chopped	STATE
-candied	STATE
+candied	NAME
 pineapple	NAME
 	
 1/2	QUANTITY
@@ -52428,8 +52428,8 @@ rice	NAME
 vinegar	NAME
 	
 8	QUANTITY
-whole	O
-grain	NAME
+whole	STATE
+grain	STATE
 tortillas	NAME
 	
 1	QUANTITY
@@ -54763,8 +54763,8 @@ pepper	NAME
 	
 200	QUANTITY
 g	UNIT
-long	SIZE
-grain	NAME
+long	STATE
+grain	STATE
 rice	NAME
 	
 1/2	QUANTITY
@@ -54953,8 +54953,8 @@ cup	UNIT
 basmati	NAME
 rice	NAME
 ,	O
-long	O
-grain	O
+long	STATE
+grain	STATE
 ,	O
 cooked	STATE
 	
@@ -56939,8 +56939,8 @@ broth	NAME
 3/4	QUANTITY
 cup	UNIT
 uncooked	STATE
-long	O
-grain	O
+long	STATE
+grain	STATE
 rice	NAME
 	
 1/3	QUANTITY
@@ -56992,8 +56992,8 @@ spicy	O
 sausage	O
 -RRB-	O
 	
-coarse	O
-grain	NAME
+coarse	STATE
+grain	STATE
 mustard	NAME
 	
 1	QUANTITY
@@ -57043,7 +57043,7 @@ cream	O
 1	QUANTITY
 cup	UNIT
 uncooked	STATE
-long-grain	O
+long-grain	STATE
 white	NAME
 rice	NAME
 	

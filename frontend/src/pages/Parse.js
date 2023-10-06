@@ -6,7 +6,7 @@ const Parse = () => {
 
   const parseIngredients = (e) => {
     e.preventDefault();
-    fetch("/parse/" + encodeURIComponent(phrase))
+    fetch("/infer/" + encodeURIComponent(phrase))
       .then((response) => response.json())
       .then((data) => {
         setParsed(data);
@@ -26,18 +26,19 @@ const Parse = () => {
         />
         <button type="submit"> Parse </button>
       </form>
-      {(!Object.keys(parsed).length) ? (
-      <div>
-        <h2> Waiting... </h2>
-      </div>
+      {!Object.keys(parsed).length ? (
+        <div>
+          <h2> Waiting... </h2>
+        </div>
       ) : (
         <div>
-        <h2> Results </h2>
-        <ul>
-          <li> {JSON.stringify(parsed.labels[0])} </li>
-          <li> {parsed.ingredients[0]} </li>
-        </ul>
-      </div>
+          <h2> Results </h2>
+          <ul>
+            {parsed.ingredients.map((item, index) => {
+              return <li key={index}> {item} </li>;
+            })}
+          </ul>
+        </div>
       )}
     </div>
   );

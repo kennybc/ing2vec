@@ -1,14 +1,17 @@
-from transformers import pipeline
 from pathlib import Path
-import time
+from transformers import pipeline
+from parser.train import train
+from parser.postprocess import postprocess_data
 
 here = Path(__file__).parent
 
-classifier = pipeline("ner", model=here / "./model", aggregation_strategy="first")
+try:
+    pipe = pipeline("ner", model=here / "./model", ignore_labels=[], aggregation_strategy="average")
+except:
+    train()
+    pipe = pipeline("ner", model=here / "./model", ignore_labels=[], aggregation_strategy="average")
 
 
 def infer(phrase):
-    clock = time.time()
-    inference = classifier(phrase)
-    print("Time elapsed: " + str(time.time() - clock))
-    return inference
+    inference = pipe(phrase)
+    return postprocess_data(inference)

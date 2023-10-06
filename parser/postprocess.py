@@ -42,5 +42,4 @@ def postprocess_data(data):
         else:
             append_if_ingredient(entity)
     
-    print(ingredients)
     return {"ingredients": ingredients, "labels": data}

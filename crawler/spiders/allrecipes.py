@@ -1,7 +1,7 @@
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from db.connect import Database
-from parser.predict import predict_ingredients
+from parser.infer import infer
 import json
 
 
@@ -27,11 +27,11 @@ class AllRecipesSpider(CrawlSpider):
             return
         if "Recipe" not in schema["@type"] or "/recipe/" not in response.url:
             return
-
+        
         # insert recipe into database
         self.db.insert_one({
             "url": response.url,
             "name": schema["headline"],
             "ingredients": schema["recipeIngredient"],
-            "ner": predict_ingredients(schema["recipeIngredient"])
+            "ner": infer(schema["recipeIngredient"])["ingredients"]
         })

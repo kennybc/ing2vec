@@ -611,6 +611,7 @@ root	NAME
 	
 1/4	QUANTITY
 cup	UNIT
+Kikkoman	O
 low-sodium	STATE
 soy	NAME
 sauce	NAME
@@ -52627,6 +52628,7 @@ mussels	O
 	
 24	QUANTITY
 tablespoons	UNIT
+Kikkoman	O
 soy	NAME
 sauce	NAME
 	
@@ -52639,6 +52641,7 @@ ground	STATE
 	
 4	QUANTITY
 tablespoons	UNIT
+Kikkoman	O
 soy	NAME
 sauce	NAME
 	
@@ -53332,6 +53335,7 @@ peppercorns	NAME
 	
 6	QUANTITY
 tablespoons	UNIT
+Kikkoman	O
 soy	NAME
 sauce	NAME
 	
@@ -57394,6 +57398,7 @@ flour	NAME
 	
 1 1/2	QUANTITY
 teaspoons	UNIT
+Kikkoman	O
 soy	NAME
 sauce	NAME
 	

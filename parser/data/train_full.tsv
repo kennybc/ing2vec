@@ -41311,6 +41311,22 @@ Reeses	O
 peanut	NAME
 butter	NAME
 cups	NAME
+
+2	QUANTITY
+peanut	NAME
+butter	NAME
+cups	NAME
+
+1	QUANTITY
+reeses	O
+peanut	NAME
+butter	NAME
+cup	NAME
+
+1	QUANTITY
+peanut	NAME
+butter	NAME
+cup	NAME
 	
 1/2	QUANTITY
 teaspoon	UNIT

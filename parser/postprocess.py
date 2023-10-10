@@ -19,15 +19,16 @@ class Encoder(json.JSONEncoder):
 
 def postprocess_data(data):
     data = json.loads(json.dumps(data, cls=Encoder))
-    ingredients = set()
+    ingredients = []
     last_tag = ""
 
     def trim_special_chars(str):
-        special_chars = ["-", "'", ""]
+        special_chars = ["-", "'"]
         for char in special_chars:
             str = str.replace(char + " ", char)
             str = str.replace(" " + char, char)
-            return str
+        str = str.replace("s'", "s' ")
+        return str.strip()
 
     def append_if_ingredient(entity):
         nonlocal ingredients, last_tag
@@ -36,7 +37,7 @@ def postprocess_data(data):
                 ingredients[-1] += entity["word"]
                 ingredients[-1] = trim_special_chars(ingredients[-1])
             else:
-                ingredients.add(trim_special_chars(entity["word"]))
+                ingredients.append(trim_special_chars(entity["word"]))
         last_tag = entity["entity_group"]
 
     for entity in data:
@@ -47,4 +48,5 @@ def postprocess_data(data):
         else:
             append_if_ingredient(entity)
 
+    ingredients = list(dict.fromkeys(ingredients))
     return {"ingredients": list(ingredients), "labels": data}

@@ -6462,7 +6462,7 @@ vinegar	NAME
 	
 1 1/2	QUANTITY
 cups	UNIT
-whole	UNIT
+whole	STATE
 wheat	NAME
 flour	NAME
 	
@@ -6509,7 +6509,7 @@ chopped	STATE
 	
 3	QUANTITY
 slices	UNIT
-whole	UNIT
+whole	STATE
 wheat	NAME
 bread	NAME
 	
@@ -7589,7 +7589,7 @@ minced	STATE
 5	QUANTITY
 cups	UNIT
 cubed	STATE
-whole	UNIT
+whole	STATE
 wheat	NAME
 bread	NAME
 	
@@ -8603,7 +8603,7 @@ salt	NAME
 inch	UNIT
 -RRB-	O
 whole	UNIT
-wheat	NAME
+wheat	STATE
 pita	NAME
 breads	NAME
 	
@@ -9495,7 +9495,7 @@ milk	NAME
 	
 1 2/3	QUANTITY
 cups	UNIT
-whole	UNIT
+whole	STATE
 wheat	NAME
 flour	NAME
 	
@@ -41303,6 +41303,13 @@ garnish	O
 teaspoon	UNIT
 cayenne	NAME
 pepper	NAME
+
+3	QUANTITY
+Reeses	O
+'	O
+peanut	NAME
+butter	NAME
+cups	NAME
 	
 1/2	QUANTITY
 teaspoon	UNIT

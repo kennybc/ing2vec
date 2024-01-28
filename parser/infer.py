@@ -6,10 +6,20 @@ from parser.postprocess import postprocess_data
 here = Path(__file__).parent
 
 try:
-    pipe = pipeline("ner", model=here / "./model", ignore_labels=[], aggregation_strategy="average")
+    pipe = pipeline(
+        "ner", model=here / "./model", ignore_labels=[], aggregation_strategy="average"
+    )
+    pipe2 = pipeline(
+        "ner",
+        model="distilbert-base-uncased",
+        ignore_labels=[],
+        aggregation_strategy="average",
+    )
 except:
     train()
-    pipe = pipeline("ner", model=here / "./model", ignore_labels=[], aggregation_strategy="average")
+    pipe = pipeline(
+        "ner", model=here / "./model", ignore_labels=[], aggregation_strategy="average"
+    )
 
 
 def infer(phrase):

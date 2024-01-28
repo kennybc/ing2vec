@@ -16,12 +16,6 @@ const Home = () => {
     fetch("/recipe/latest")
       .then((response) => response.json())
       .then((data) => setRecipe(data));
-
-    /*const source = new EventSource("http://localhost:5000/recipe/current");
-
-        source.onmessage = () => {
-          console.log("update");
-        }*/
   }, []);
 
   if (!recipe || recipe === undefined || recipe.name == undefined) {

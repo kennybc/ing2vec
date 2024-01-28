@@ -5,7 +5,12 @@ from pathlib import Path
 from torch.utils.data import random_split
 from parser.preprocess import label2id, model, tokenizer
 from parser.preprocess import preprocess_data, tokenize_labels
-from transformers import logging, DataCollatorForTokenClassification, TrainingArguments, Trainer
+from transformers import (
+    logging,
+    DataCollatorForTokenClassification,
+    TrainingArguments,
+    Trainer,
+)
 
 here = Path(__file__).parent
 
@@ -23,7 +28,7 @@ def split_data(data, train_size=0.9):
 
 
 # fine-tune a pre-trained model using tsv data from a given file path
-def train(data_path=here / "./data/train_full.tsv", save_path="parser/model"):
+def train(data_path=here / "./data/train_full.tsv", save_path=here / "./model"):
     data = preprocess_data(data_path)
     tokenized_data = tokenize_labels(data)
     train_data, test_data = split_data(tokenized_data)
@@ -46,8 +51,7 @@ def train(data_path=here / "./data/train_full.tsv", save_path="parser/model"):
             for prediction, label in zip(predictions, labels)
         ]
 
-        results = seqeval.compute(
-            predictions=true_predictions, references=true_labels)
+        results = seqeval.compute(predictions=true_predictions, references=true_labels)
         return {
             "precision": results["overall_precision"],
             "recall": results["overall_recall"],

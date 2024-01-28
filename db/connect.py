@@ -3,14 +3,14 @@ from dotenv import load_dotenv
 import certifi
 from os import getenv
 
-load_dotenv() 
+load_dotenv()
+
 
 class Database:
     def __init__(self):
-        self.client = MongoClient(getenv("MONGODB_URI"), tls=True, tlsCAFile=certifi.where())
-
-    """def __del__(self):
-        self.client.close()"""
+        self.client = MongoClient(
+            getenv("MONGODB_URI"), tls=True, tlsCAFile=certifi.where()
+        )
 
     def get_client(self):
-        return self.client["Crawler"]["Recipes"]
+        return self.client["Crawler"]

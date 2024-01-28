@@ -28,24 +28,27 @@ def postprocess_data(data):
             str = str.replace(" " + char, char)
         str = str.replace("s'", "s' ")
         return str.strip()
-    
+
     def aggregate_names(group):
         nonlocal ingredients
-        conjunctions = [",", "and", "+", "also", "plus"]
+        conjunctions = [",", "and", "+", "also", "plus", ";"]
         ingredient = ""
         for entity in group:
             if entity["word"] in conjunctions:
-                ingredients.append(trim_special_chars(ingredient))
+                if trim_special_chars(ingredient):
+                    ingredients.append(trim_special_chars(ingredient))
                 ingredient = ""
             if entity["entity_group"] == "name":
                 ingredient += " " + entity["word"]
-        ingredients.append(trim_special_chars(ingredient))
-        
+
+        if trim_special_chars(ingredient):
+            ingredients.append(trim_special_chars(ingredient))
+
     if isinstance(data[0], list):
         for group in data:
             aggregate_names(group)
     else:
         aggregate_names(data)
-        
+
     ingredients = list(dict.fromkeys(ingredients))
     return {"ingredients": list(ingredients), "labels": data}

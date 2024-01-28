@@ -1,5 +1,6 @@
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from itertools import combinations
 from db.connect import Database
 from parser.infer import infer
 import json
@@ -49,11 +50,7 @@ class AllRecipesSpider(CrawlSpider):
         # filter cuisines
         cuisines = set()
         for cuisine in schema["recipeCuisine"]:
-            # "__ Inspired" = __ and American
-            inspired = cuisine.replace(" Inspired", "")
-            if inspired != cuisine:
-                cuisines.add("American")
-                cuisine = inspired
+            cuisine = cuisine.replace(" Inspired", "")
 
             # convert equivalent cuisines (U.S. --> American)
             if cuisine in equal:
@@ -63,12 +60,32 @@ class AllRecipesSpider(CrawlSpider):
                 cuisines.add(cuisine)
 
         # insert recipe into database
-        self.db.insert_one(
+        ner = infer(schema["recipeIngredient"])["ingredients"]
+        self.db["Recipes"].insert_one(
             {
                 "url": response.url,
                 "name": schema["headline"],
                 "cuisine": list(cuisines),
-                # "ingredients": schema["recipeIngredient"],
-                "ner": infer(schema["recipeIngredient"])["ingredients"],
+                "ingredients": schema["recipeIngredient"],
+                "ner": ner,
             }
         )
+
+        ner_ids = []
+        for ingredient in ner:
+            result = self.db["Ingredients"].find_one_and_update(
+                {"name": ingredient},
+                {"$inc": {"count": 1}},
+                upsert=True,
+                return_document=True,
+                projection={"_id": True},
+            )
+            ner_ids.append(str(result["_id"]))
+
+        for edge in combinations(ner_ids, 2):
+            i1, i2 = edge
+            self.db["Edges"].update_one(
+                {"node1": min(i1, i2), "node2": max(i1, i2)},
+                {"$inc": {"count": 1}},
+                upsert=True,
+            )

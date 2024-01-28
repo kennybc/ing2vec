@@ -4,19 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm-run-all -p frontend backend crawl",
-    "crawl": "scrapy crawl allrecipes -s JOBDIR=crawler/jobdir",
-    "frontend": "react-scripts start",
-    "backend": "uvicorn backend.server:app --reload"
+    "start": "react-scripts start"
   },
   "author": "",
   "license": "ISC",
   "proxy": "http://127.0.0.1:8000",
   "dependencies": {
-    "npm-run-all": "^4.1.5",
+    "cytoscape": "^3.28.1",
+    "cytoscape-fcose": "^2.2.0",
+    "cytoscape-popper": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^6.21.3",
     "react-scripts": "^5.0.1"
   },
   "browserslist": {
@@ -30,8 +29,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }

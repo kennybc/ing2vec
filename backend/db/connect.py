@@ -9,7 +9,10 @@ load_dotenv()
 class Database:
     def __init__(self):
         self.client = MongoClient(
-            getenv("MONGODB_URI"), tls=True, tlsCAFile=certifi.where()
+            host=[getenv("MONGODB_URI")],
+            serverSelectionTimeoutMS=3000,  # 3 second timeout
+            username="admin",
+            password="1234",
         )
 
     def get_client(self):

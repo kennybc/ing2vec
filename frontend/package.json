@@ -8,7 +8,7 @@
   },
   "author": "",
   "license": "ISC",
-  "proxy": "http://127.0.0.1:8000",
+  "proxy": "http://backend:8000",
   "dependencies": {
     "cytoscape": "^3.28.1",
     "cytoscape-fcose": "^2.2.0",

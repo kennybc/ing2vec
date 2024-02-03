@@ -1,4 +1,4 @@
 **/__pycache__/
 /frontend/node_modules
-/parser/model
-/crawler/jobdir
+/backend/parser/model
+/backend/crawler/jobdir

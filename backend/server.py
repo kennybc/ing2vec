@@ -1,10 +1,12 @@
 from urllib.parse import unquote
 from db.connect import Database
 from fastapi import FastAPI, HTTPException
+
 from parser.train import train
 from parser.infer import infer
 from pymongo import DESCENDING
-from backend.paginate import paginate
+from paginate import paginate
+
 from node2vec.train import train2
 from node2vec.train import get_words
 
@@ -16,6 +18,11 @@ try:
     db = conn.get_client()
 except:
     offline = True
+
+
+######################################
+# Database Endpoints
+#
 
 
 @app.get("/recipe/{url}")
@@ -37,36 +44,6 @@ async def get_recipe_by_url(url):
     return recipe
 
 
-@app.get("/infer/{phrase}")
-async def infer_ingredients(phrase):
-    phrase = unquote(phrase)
-    return infer(phrase)
-
-
-@app.get("/cuisine/{cuisine}")
-async def get_cuisine(cuisine, page=1):
-    if offline:
-        return
-
-    page = int(page)
-    return paginate(db["Recipes"], f"cuisine/{cuisine}", {"cuisine": cuisine}, page)
-
-
-# @app.get("/train")
-# def train_model():
-#    train()
-
-
-@app.get("/train2")
-def train_model():
-    train2()
-
-
-@app.get("/get-words")
-def get_words_from_model():
-    get_words("cook")
-
-
 @app.get("/nodes")
 async def get_nodes(page=1):
     if offline:
@@ -85,6 +62,46 @@ async def get_edges(page=1):
     page = int(page)
     # return paginate(db["Edges"], f"edges", {"count": {"$gt": 1}}, page, 1000)
     return paginate(db["Edges"], f"edges", {}, page, 1000)
+
+
+@app.get("/cuisine/{cuisine}")
+async def get_cuisine(cuisine, page=1):
+    if offline:
+        return
+
+    page = int(page)
+    return paginate(db["Recipes"], f"cuisine/{cuisine}", {"cuisine": cuisine}, page)
+
+
+######################################
+# Parser model endpoints
+#
+
+
+@app.get("/train")
+def train_model():
+    train()
+
+
+@app.get("/infer/{phrase}")
+async def infer_ingredients(phrase):
+    phrase = unquote(phrase)
+    return infer(phrase)
+
+
+######################################
+# Node2Vec model endpoints
+#
+
+
+@app.get("/train2")
+def train_model():
+    train2()
+
+
+@app.get("/get-words")
+def get_words_from_model():
+    get_words("cook")
 
 
 @app.get("/num-nodes")

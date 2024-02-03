@@ -21,7 +21,7 @@ label2id = {
     "I-temp": 11,
     "B-df": 12,
     "I-df": 13,
-    "O": 14
+    "O": 14,
 }
 id2label = {
     0: "B-quantity",
@@ -38,7 +38,7 @@ id2label = {
     11: "I-temp",
     12: "B-df",
     13: "I-df",
-    14: "O"
+    14: "O",
 }
 
 model_name = "distilbert-base-uncased"
@@ -122,7 +122,8 @@ def tokenize_labels(data):
     # tokenize the labels of a single example within the dataset
     def tokenize_label(example):
         tokenized = tokenizer(
-            example["tokens"], padding=True, truncation=True, is_split_into_words=True)
+            example["tokens"], padding=True, truncation=True, is_split_into_words=True
+        )
         labels = []
         for i, label in enumerate(example["labels"]):
             word_ids = tokenized.word_ids(batch_index=i)

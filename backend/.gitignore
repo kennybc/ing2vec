@@ -1,0 +1,4 @@
+**/__pycache__/
+/parser/model
+/crawler/jobdir
+.env

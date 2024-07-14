@@ -4,13 +4,14 @@ from sklearn.manifold import TSNE
 import pandas as pd
 import json
 
+from node2vec.preprocess import flatten_walks
+
 here = Path(__file__).parent
 
 
 def train2():
-    data = []
-    with open("./node2vec/data.json") as f:
-        data = json.load(f)
+    data = flatten_walks()
+
     model = Word2Vec(
         sentences=data,
         vector_size=100,
@@ -24,7 +25,7 @@ def train2():
 def get_words(word):
     model = Word2Vec.load("./node2vec/word2vec.model")
     vector = model.wv["chicken broth"]  # get numpy vector of a word
-    sims = model.wv.most_similar("chicken broth", topn=3)  # get other similar words
+    sims = model.wv.most_similar("soy sauce", topn=50)  # get other similar words
 
     print(vector)
     print(sims)

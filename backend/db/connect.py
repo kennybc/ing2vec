@@ -9,11 +9,11 @@ load_dotenv()
 class Database:
     def __init__(self):
         self.client = MongoClient(
-            host=[getenv("MONGODB_URI")],
+            # getenv("MONGODB_URI"),
+            "localhost",
+            27017,
             serverSelectionTimeoutMS=3000,  # 3 second timeout
-            username="admin",
-            password="1234",
         )
 
     def get_client(self):
-        return self.client["Crawler"]
+        return self.client["ing2vec"]

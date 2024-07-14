@@ -61,7 +61,7 @@ class AllRecipesSpider(CrawlSpider):
 
         # insert recipe into database
         ner = infer(schema["recipeIngredient"])["ingredients"]
-        self.db["Recipes"].insert_one(
+        self.db["recipes"].insert_one(
             {
                 "url": response.url,
                 "name": schema["headline"],
@@ -73,7 +73,7 @@ class AllRecipesSpider(CrawlSpider):
 
         ner_ids = []
         for ingredient in ner:
-            result = self.db["Ingredients"].find_one_and_update(
+            result = self.db["ingredients"].find_one_and_update(
                 {"name": ingredient},
                 {"$inc": {"count": 1}},
                 upsert=True,
@@ -84,7 +84,7 @@ class AllRecipesSpider(CrawlSpider):
 
         for edge in combinations(ner_ids, 2):
             i1, i2 = edge
-            self.db["Edges"].update_one(
+            self.db["edges"].update_one(
                 {"node1": min(i1, i2), "node2": max(i1, i2)},
                 {"$inc": {"count": 1}},
                 upsert=True,

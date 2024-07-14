@@ -2,13 +2,15 @@ from db.connect import Database
 import numpy as np
 from bson.objectid import ObjectId
 import json
+import pymongo
+import networkx as nx
 
 db = Database().get_client()
 
 
 def get_nodes():
     nodes = []
-    for node in db["Ingredients"].find():
+    for node in db["ingredients"].find():
         nodes.append(node)
     return nodes
 
@@ -16,7 +18,7 @@ def get_nodes():
 def get_neighbors(node):
     node = str(node["_id"])
     neighbors = []
-    for neighbor in db["Edges"].find({"$or": [{"node1": node}, {"node2": node}]}):
+    for neighbor in db["edges"].find({"$or": [{"node1": node}, {"node2": node}]}):
         if neighbor["node1"] == node:
             neighbor_id = neighbor["node2"]
         else:
@@ -25,7 +27,7 @@ def get_neighbors(node):
         neighbors.append(
             {
                 "id": neighbor_id,
-                "name": db["Ingredients"].find_one({"_id": ObjectId(neighbor_id)})[
+                "name": db["ingredients"].find_one({"_id": ObjectId(neighbor_id)})[
                     "name"
                 ],
                 "weight": neighbor["count"],
@@ -36,7 +38,7 @@ def get_neighbors(node):
 
 
 def has_edge(node1, node2):
-    return db["Edges"].count_documents(
+    return db["edges"].count_documents(
         {
             "$or": [
                 {"$and": [{"node1": node1}, {"node2": node2}]},
@@ -46,47 +48,85 @@ def has_edge(node1, node2):
     )
 
 
+def generate_graph():
+    graph = nx.Graph()
+    for node in db["ingredients"].find():
+        graph.add_node(str(node["_id"]), name=node["name"], count=node["count"])
+    for edge in db["edges"].find():
+        graph.add_edge(edge["node1"], edge["node2"], weight=edge["count"])
+
+    return graph
+
+
+def flatten_walks():
+    walks = []
+    for walk in db["walks"].find():
+        walks.append(walk["walk"])
+
+    return walks
+
+
 # q biases walks to look for nodes further away;
 # the lower q is, the further away it looks
 # p biases the probability to return to the immediately previous node in the walk
 # a lower p increases the probability to keep the walk path more local/tight
-def generate_walks(walks_per_node=10, walk_length=50, p=1.0, q=1.0):
-    nodes = get_nodes()
+def generate_walks(walks_per_node=50, walk_length=25, p=1.0, q=1.0):
+    graph = generate_graph()
+    print(graph)
 
     def get_next_node(node, prev):
         weights = []
-        neighbors = get_neighbors(node)
+        neighbors = list(graph.neighbors(node))
         for neighbor in neighbors:
-            if neighbor["id"] == prev["id"]:
-                weights.append(neighbor["weight"] / p)
-            elif has_edge(node["_id"], neighbor["id"]):
-                weights.append(neighbor["weight"])
+            if neighbor == prev:
+                weights.append(graph[node][neighbor]["weight"] / p)
+            elif graph.has_edge(neighbor, prev):
+                weights.append(graph[node][neighbor]["weight"])
             else:
-                weights.append(neighbor["weight"] / q)
+                weights.append(graph[node][neighbor]["weight"] / q)
 
         weight_sum = sum(weights)
         probs = [weight / weight_sum for weight in weights]
         return np.random.choice(neighbors, p=probs)
 
-    walks = []
+    # get last walk: walks store the origin node and index so
+    # if walk generation is interrupted, it can pick up from where it left off
+    last = db["walks"].find_one(sort=[("_id", pymongo.DESCENDING)])
+    if last is None:
+        last = {"node": "0", "walk_index": -1}
 
-    for node in nodes:
-        for _ in range(walks_per_node):
-            prev = {"id": node["_id"]}
+    skipped_last = False
+    for id, node in graph.nodes(data=True):
+        # skip nodes we've already generated walks for
+        if id <= last["node"]:
+            continue
+
+        walks_remaining = walks_per_node - last["walk_index"] - 1
+
+        if skipped_last:
+            walks_remaining = walks_per_node
+
+        walks_from_node = []
+        for walk_index in range(walks_remaining):
+            prev = id
             walk = [node["name"]]
             for _ in range(walk_length):
-                next = get_next_node(node, prev)
-                walk.append(next["name"])
+                next = get_next_node(id, prev)
+                walk.append(graph.nodes[next]["name"])
                 prev = next
 
-            walks.append(walk)
-            print(
-                "Random walk progress: "
-                + str(len(walks))
-                + "/"
-                + str(len(nodes) * walks_per_node)
-            )
+            walk_doc = {"node": id, "walk_index": walk_index, "walk": walk}
+            walks_from_node.append(walk_doc)
 
-    with open("./node2vec/data.json", "w") as f:
-        json.dump(walks, f)
-    print(walks)
+        if not walks_from_node:
+            skipped_last = True
+            continue
+
+        db["walks"].insert_many(walks_from_node)
+        """print(
+            "Random walk progress: "
+            + str(walk_index)
+            + "/"
+            + str(graph.number_of_nodes()),
+            flush=True,
+        )"""

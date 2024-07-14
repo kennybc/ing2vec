@@ -2,8 +2,8 @@ from urllib.parse import unquote
 from db.connect import Database
 from fastapi import FastAPI, HTTPException
 
-from parser.train import train
-from parser.infer import infer
+# from parser.train import train
+# from parser.infer import infer
 from pymongo import DESCENDING
 from paginate import paginate
 
@@ -78,7 +78,7 @@ async def get_cuisine(cuisine, page=1):
 #
 
 
-@app.get("/train")
+"""@app.get("/train")
 def train_model():
     train()
 
@@ -86,7 +86,7 @@ def train_model():
 @app.get("/infer/{phrase}")
 async def infer_ingredients(phrase):
     phrase = unquote(phrase)
-    return infer(phrase)
+    return infer(phrase)"""
 
 
 ######################################
@@ -104,8 +104,17 @@ def get_words_from_model():
     get_words("cook")
 
 
-@app.get("/num-nodes")
+@app.get("/gen-walks")
 async def num_nodes():
     from node2vec.preprocess import generate_walks
 
     generate_walks()
+
+
+@app.get("/walks")
+async def get_walks(page=1):
+    if offline:
+        return
+
+    page = int(page)
+    return paginate(db["Walks"], f"walks", {}, page, 100)

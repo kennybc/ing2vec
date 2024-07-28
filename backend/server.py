@@ -34,9 +34,9 @@ async def get_recipe_by_url(url):
     recipe = {}
 
     if url == "latest":
-        recipe = db["Recipes"].find_one({}, sort=[("_id", DESCENDING)])
+        recipe = db["recipes"].find_one({}, sort=[("_id", DESCENDING)])
     else:
-        recipe = db["Recipes"].find_one({"url": url})
+        recipe = db["recipes"].find_one({"url": url})
 
     if recipe:
         del recipe["_id"]
@@ -51,7 +51,7 @@ async def get_nodes(page=1):
 
     page = int(page)
     # return paginate(db["Ingredients"], f"nodes", {"count": {"$gt": 1}}, page, 1000)
-    return paginate(db["Ingredients"], f"nodes", {}, page, 1000)
+    return paginate(db["ingredients"], f"nodes", {}, page, 1000)
 
 
 @app.get("/edges")
@@ -61,7 +61,7 @@ async def get_edges(page=1):
 
     page = int(page)
     # return paginate(db["Edges"], f"edges", {"count": {"$gt": 1}}, page, 1000)
-    return paginate(db["Edges"], f"edges", {}, page, 1000)
+    return paginate(db["edges"], f"edges", {}, page, 1000)
 
 
 @app.get("/cuisine/{cuisine}")
@@ -70,7 +70,7 @@ async def get_cuisine(cuisine, page=1):
         return
 
     page = int(page)
-    return paginate(db["Recipes"], f"cuisine/{cuisine}", {"cuisine": cuisine}, page)
+    return paginate(db["recipes"], f"cuisine/{cuisine}", {"cuisine": cuisine}, page)
 
 
 ######################################
@@ -99,9 +99,9 @@ def train_model():
     train2()
 
 
-@app.get("/get-words")
-def get_words_from_model():
-    get_words("cook")
+@app.get("/get-words/{word}")
+def get_words_from_model(word):
+    get_words(word)
 
 
 @app.get("/gen-walks")
@@ -117,4 +117,4 @@ async def get_walks(page=1):
         return
 
     page = int(page)
-    return paginate(db["Walks"], f"walks", {}, page, 100)
+    return paginate(db["walks"], f"walks", {}, page, 100)

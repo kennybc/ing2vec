@@ -1,6 +1,7 @@
 from db.connect import Database
 import numpy as np
 from bson.objectid import ObjectId
+import math
 import json
 import pymongo
 import networkx as nx
@@ -50,10 +51,33 @@ def has_edge(node1, node2):
 
 def generate_graph():
     graph = nx.Graph()
-    for node in db["ingredients"].find():
-        graph.add_node(str(node["_id"]), name=node["name"], count=node["count"])
-    for edge in db["edges"].find():
-        graph.add_edge(edge["node1"], edge["node2"], weight=edge["count"])
+    ingredients = db["ingredients"].find()
+    for ingredient in ingredients:
+        graph.add_node(
+            str(ingredient["_id"]), name=ingredient["name"], count=ingredient["count"]
+        )
+
+    least_pmi = 0
+    edges = db["edges"].find()
+    total_edges = db["edges"].count_documents({})
+    for edge in edges:
+        # cocurrency count as edge weight
+        # graph.add_edge(edge["node1"], edge["node2"], weight=edge["count"])
+
+        # PMI as edge weight
+        total_nodes = len(graph.nodes)
+        pxy = edge["count"] / total_edges  # p(x and y)
+        px = graph.nodes[edge["node1"]]["count"] / total_nodes  # p(x)
+        py = graph.nodes[edge["node2"]]["count"] / total_nodes  # p(y)
+        pmi = math.log(pxy / (px * py), 2)
+        graph.add_edge(edge["node1"], edge["node2"], weight=pmi)
+
+        if pmi < least_pmi:
+            least_pmi = pmi
+
+    # add most negative PMI to all edge weights to ensure all are positive
+    for _, _, edge in graph.edges(data=True):
+        edge["weight"] += abs(least_pmi)
 
     return graph
 

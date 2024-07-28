@@ -2,7 +2,11 @@ from gensim.models import Word2Vec
 from pathlib import Path
 from sklearn.manifold import TSNE
 import pandas as pd
-import json
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.switch_backend("agg")
 
 from node2vec.preprocess import flatten_walks
 
@@ -24,10 +28,8 @@ def train2():
 
 def get_words(word):
     model = Word2Vec.load("./node2vec/word2vec.model")
-    vector = model.wv["chicken broth"]  # get numpy vector of a word
-    sims = model.wv.most_similar("soy sauce", topn=50)  # get other similar words
+    sims = model.wv.most_similar(word, topn=50)  # get other similar words
 
-    print(vector)
     print(sims)
 
     vocab = list(model.wv.key_to_index)
@@ -35,4 +37,15 @@ def get_words(word):
     tsne = TSNE(n_components=2, perplexity=5)
     X_tsne = tsne.fit_transform(X)
     df = pd.DataFrame(X_tsne, index=vocab, columns=["x", "y"])
-    print(df)
+    plt.figure(figsize=(16, 10))
+    sns.scatterplot(
+        x="x",
+        y="y",
+        hue="y",
+        palette=sns.color_palette("hls", 961),
+        data=df,
+        legend="full",
+        alpha=0.3,
+    )
+    plt.savefig("plot.png")
+    df.to_csv("data.csv")

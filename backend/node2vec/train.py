@@ -48,4 +48,5 @@ def get_words(word):
         alpha=0.3,
     )
     plt.savefig("plot.png")
-    df.to_csv("data.csv")
+    # df.to_csv("data.csv")
+    df.to_json("data.json", orient="records", lines=True)

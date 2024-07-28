@@ -10,11 +10,15 @@
   "license": "ISC",
   "proxy": "http://localhost:8000",
   "dependencies": {
+    "chart.js": "^4.4.3",
     "cytoscape": "^3.28.1",
     "cytoscape-fcose": "^2.2.0",
     "cytoscape-popper": "^2.0.0",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-papaparse": "^4.4.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "^5.0.1"
   },

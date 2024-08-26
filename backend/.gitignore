@@ -2,3 +2,5 @@
 /parser/model
 /crawler/jobdir
 .env
+
+.venv/

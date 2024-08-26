@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import "chart.js/auto";
+import Chart from "chart.js/auto";
 import { readString } from "react-papaparse";
 import { Scatter } from "react-chartjs-2";
+import zoomPlugin from "chartjs-plugin-zoom";
 
 import csv from "../assets/data.csv";
 import "./graph.css";
+
+Chart.register(zoomPlugin);
 
 export default function Graph() {
   const X_AXIS = "x";
@@ -29,7 +32,7 @@ export default function Graph() {
         setData({
           datasets: [
             {
-              label: "My First dataset",
+              label: "Ingredients",
               backgroundColor: "black",
               data: parsed,
               pointRadius: POINT_RADIUS,
@@ -85,6 +88,21 @@ export default function Graph() {
             console.log(ctx);
             return ctx.raw.name;
           },
+        },
+      },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: "xy",
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
         },
       },
     },

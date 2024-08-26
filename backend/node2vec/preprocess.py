@@ -5,8 +5,43 @@ import math
 import json
 import pymongo
 import networkx as nx
+from datasets import load_dataset
+from itertools import combinations
 
 db = Database().get_client()
+
+
+# load recipeNLG dataset and add to mongo
+def load_recipe_dataset():
+    dataset_dict = load_dataset("mbien/recipe_nlg", data_dir="node2vec/data/")
+    dataset = dataset_dict["train"]
+    iter = dataset.iter(batch_size=1)
+    for recipe in iter:
+
+        flattened = {}
+        for k, v in recipe.items():
+            flattened[k] = v[0]
+
+        ner_ids = []
+        db["recipes"].insert_one(flattened)
+        for ingredient in flattened["ner"]:
+            ingredient = ingredient.lower()
+            result = db["ingredients"].find_one_and_update(
+                {"name": ingredient},
+                {"$inc": {"count": 1}},
+                upsert=True,
+                return_document=True,
+                projection={"_id": True},
+            )
+            ner_ids.append(str(result["_id"]))
+
+        for edge in combinations(ner_ids, 2):
+            i1, i2 = edge
+            db["edges"].update_one(
+                {"node1": min(i1, i2), "node2": max(i1, i2)},
+                {"$inc": {"count": 1}},
+                upsert=True,
+            )
 
 
 def get_nodes():
@@ -16,7 +51,7 @@ def get_nodes():
     return nodes
 
 
-def get_neighbors(node):
+"""def get_neighbors(node):
     node = str(node["_id"])
     neighbors = []
     for neighbor in db["edges"].find({"$or": [{"node1": node}, {"node2": node}]}):
@@ -35,23 +70,22 @@ def get_neighbors(node):
             }
         )
 
-    return neighbors
+    return neighbors"""
 
 
 def has_edge(node1, node2):
     return db["edges"].count_documents(
-        {
-            "$or": [
-                {"$and": [{"node1": node1}, {"node2": node2}]},
-                {"$and": [{"node1": node2}, {"node2": node1}]},
-            ]
-        }
+        {"$and": [{"node1": min(node1, node2)}, {"node2": max(node1, node2)}]}
     )
 
 
-def generate_graph():
+def generate_graph(overwrite=True):
+    if not overwrite:
+        return nx.read_gml("node2vec/data/graph.gml")
+
     graph = nx.Graph()
-    ingredients = db["ingredients"].find()
+    # only consider ingredients with count > 2
+    ingredients = db["ingredients"].find({"count": {"$gt": 10}})
     for ingredient in ingredients:
         graph.add_node(
             str(ingredient["_id"]), name=ingredient["name"], count=ingredient["count"]
@@ -64,21 +98,26 @@ def generate_graph():
         # cocurrency count as edge weight
         # graph.add_edge(edge["node1"], edge["node2"], weight=edge["count"])
 
-        # PMI as edge weight
-        total_nodes = len(graph.nodes)
-        pxy = edge["count"] / total_edges  # p(x and y)
-        px = graph.nodes[edge["node1"]]["count"] / total_nodes  # p(x)
-        py = graph.nodes[edge["node2"]]["count"] / total_nodes  # p(y)
-        pmi = math.log(pxy / (px * py), 2)
-        graph.add_edge(edge["node1"], edge["node2"], weight=pmi)
+        # may fail if node doesn't exist (filtered out from the min count constraint)
+        try:
+            # PMI as edge weight
+            total_nodes = len(graph.nodes)
+            pxy = edge["count"] / total_edges  # p(x and y)
+            px = graph.nodes[edge["node1"]]["count"] / total_nodes  # p(x)
+            py = graph.nodes[edge["node2"]]["count"] / total_nodes  # p(y)
+            pmi = math.log(pxy / (px * py), 2)
+            graph.add_edge(edge["node1"], edge["node2"], weight=pmi)
 
-        if pmi < least_pmi:
-            least_pmi = pmi
+            if pmi < least_pmi:
+                least_pmi = pmi
+        except:
+            continue
 
     # add most negative PMI to all edge weights to ensure all are positive
     for _, _, edge in graph.edges(data=True):
         edge["weight"] += abs(least_pmi)
 
+    nx.write_gml(graph, "node2vec/data/graph.gml")
     return graph
 
 

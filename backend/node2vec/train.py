@@ -37,16 +37,5 @@ def get_words(word):
     tsne = TSNE(n_components=2, perplexity=5)
     X_tsne = tsne.fit_transform(X)
     df = pd.DataFrame(X_tsne, index=vocab, columns=["x", "y"])
-    plt.figure(figsize=(16, 10))
-    sns.scatterplot(
-        x="x",
-        y="y",
-        hue="y",
-        palette=sns.color_palette("hls", 961),
-        data=df,
-        legend="full",
-        alpha=0.3,
-    )
-    plt.savefig("plot.png")
-    # df.to_csv("data.csv")
-    df.to_json("data.json", orient="records", lines=True)
+    df.to_csv("data.csv")
+    # df.to_json("data.json", orient="records", lines=True)

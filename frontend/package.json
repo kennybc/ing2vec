@@ -11,6 +11,7 @@
   "proxy": "http://localhost:8000",
   "dependencies": {
     "chart.js": "^4.4.3",
+    "chartjs-plugin-zoom": "^2.0.1",
     "cytoscape": "^3.28.1",
     "cytoscape-fcose": "^2.2.0",
     "cytoscape-popper": "^2.0.0",

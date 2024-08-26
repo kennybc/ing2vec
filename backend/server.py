@@ -7,8 +7,10 @@ from fastapi import FastAPI, HTTPException
 from pymongo import DESCENDING
 from paginate import paginate
 
-from node2vec.train import train2
-from node2vec.train import get_words
+from node2vec.train import train2, get_words
+from node2vec.preprocess import load_recipe_dataset
+
+
 
 app = FastAPI()
 
@@ -93,6 +95,9 @@ async def infer_ingredients(phrase):
 # Node2Vec model endpoints
 #
 
+@app.get("/load-dataset")
+def download_dataset():
+    load_recipe_dataset()
 
 @app.get("/train2")
 def train_model():

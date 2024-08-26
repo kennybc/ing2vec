@@ -1,5 +1,6 @@
 {
   "name": "graph",
+  "homepage": "kennybc.github.io/ing2vec",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
